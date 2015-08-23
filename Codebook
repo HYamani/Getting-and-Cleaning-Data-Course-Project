@@ -1,0 +1,69 @@
+> setwd("~/Desktop/rhyam")
+
+
+# load required packages
+> library(data.table)
+> library(dplyr)
+
+
+> if (!file.exists("./data/UciHarDataset")) {
+        dir.create("./data/UciHarDataset")
+}
+
+> fileUrl <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
+> download.file(fileUrl, destfile = ".data/UciHarDataset/Dataset.zip", method = "curl")
+> list.files("./data")
+
+> dateDownloaded <- date()
+> dateDownloaded
+
+
+# Read Activities files:
+
+> ActivityTest <- read.table("./data/UciHarDataset/test/y_test.txt", header = FALSE)
+> ActivityTrain <- read.table("./data/UciHarDataset/train/y_train.txt", header = FALSE)
+
+# Read Subject Files:
+        
+> SubjectTest <- read.table("./data/UciHarDataset/test/subject_test.txt", header = FALSE)
+> SubjectTrain <- read.table("./data/UciHarDataset/train/subject_train.txt", header = FALSE)
+
+# Read Features files:
+
+> FeaturesTest <- read.table("./data/UciHarDataset/test/x_test.txt", header = FALSE)
+> FeaturesTrain <- read.table("./data/UciHarDataset/train/x_train.txt", header = FALSE)
+
+
+# Merge data
+> ActivityData <- rbind(ActivityTest, ActivityTrain)
+> SubjectData <- rbind(SubjectTest, SubjectTrain)
+> FeaturesData <- rbind(FeaturesTest, FeaturesTrain)
+
+# naming columns
+
+> colnames(ActivityData) <- "Activity"
+> colnames(SubjectData) <- "Subject"
+
+#Naming the columns
+> FeaturesNames <- read.table("./data/UciHarDataset/features.txt", header = FALSE)
+> colnames(features) <- t(featuresNames[2])
+
+# Merge The Data
+> DataComplete <- cbind(FeaturesData,ActivityData,SubjectData)
+
+
+#Extracts only the measurements on the mean and standard deviation for each measurement
+
+> columnsWithMeanSTD <- grep(".*Mean.*|.*Std.*", names(DataComplete), ignore.case=TRUE)
+
+> AddedColumns <- c(columnsWithMeanSTD, 562, 563)
+
+> FinalData <- DataComplete[,AddedColumns]
+
+# Uses descriptive activity names to name the activities in the data set to name activitiesin the Data set
+
+
+
+
+
+
