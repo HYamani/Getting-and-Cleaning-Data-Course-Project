@@ -1,93 +1,425 @@
-> setwd("~/Desktop/rhyam")
+Variable list and descriptions
+
+Variable name	Description
+subject	ID the subject who performed the activity for each window sample. Its range is from 1 to 30.
+activity	Activity name
+featDomain	Feature: Time domain signal or frequency domain signal (Time or Freq)
+featInstrument	Feature: Measuring instrument (Accelerometer or Gyroscope)
+featAcceleration	Feature: Acceleration signal (Body or Gravity)
+featVariable	Feature: Variable (Mean or SD)
+featJerk	Feature: Jerk signal
+featMagnitude	Feature: Magnitude of the signals calculated using the Euclidean norm
+featAxis	Feature: 3-axial signals in the X, Y and Z directions (X, Y, or Z)
+featCount	Feature: Count of data points used to compute average
+featAverage	Feature: Average of each variable for each activity and each subject
+
+Show a few rows of the dataset
 
 
-# load required packages
-> library(data.table)
-> library(dplyr)
+str(FinalData)
+Classes ‘data.table’ and 'data.frame':	10299 obs. of  88 variables:
+ $ TimeBodyAccelerometerelerometerMean()-X                    : num  0.257 0.286 0.275 0.27 0.275 ...
+ $ TimeBodyAccelerometerelerometerMean()-Y                    : num  -0.0233 -0.0132 -0.0261 -0.0326 -0.0278 ...
+ $ TimeBodyAccelerometerelerometerMean()-Z                    : num  -0.0147 -0.1191 -0.1182 -0.1175 -0.1295 ...
+ $ TimeBodyAccelerometerelerometerSTD()-X                     : num  -0.938 -0.975 -0.994 -0.995 -0.994 ...
+ $ TimeBodyAccelerometerelerometerSTD()-Y                     : num  -0.92 -0.967 -0.97 -0.973 -0.967 ...
+ $ TimeBodyAccelerometerelerometerSTD()-Z                     : num  -0.668 -0.945 -0.963 -0.967 -0.978 ...
+ $ TimeGravityAccelerometerelerometerMean()-X                 : num  0.936 0.927 0.93 0.929 0.927 ...
+ $ TimeGravityAccelerometerelerometerMean()-Y                 : num  -0.283 -0.289 -0.288 -0.293 -0.303 ...
+ $ TimeGravityAccelerometerelerometerMean()-Z                 : num  0.115 0.153 0.146 0.143 0.138 ...
+ $ TimeGravityAccelerometerelerometerSTD()-X                  : num  -0.925 -0.989 -0.996 -0.993 -0.996 ...
+ $ TimeGravityAccelerometerelerometerSTD()-Y                  : num  -0.937 -0.984 -0.988 -0.97 -0.971 ...
+ $ TimeGravityAccelerometerelerometerSTD()-Z                  : num  -0.564 -0.965 -0.982 -0.992 -0.968 ...
+ $ TimeBodyAccelerometerelerometerJerkMean()-X                : num  0.072 0.0702 0.0694 0.0749 0.0784 ...
+ $ TimeBodyAccelerometerelerometerJerkMean()-Y                : num  0.04575 -0.01788 -0.00491 0.03227 0.02228 ...
+ $ TimeBodyAccelerometerelerometerJerkMean()-Z                : num  -0.10604 -0.00172 -0.01367 0.01214 0.00275 ...
+ $ TimeBodyAccelerometerelerometerJerkSTD()-X                 : num  -0.907 -0.949 -0.991 -0.991 -0.992 ...
+ $ TimeBodyAccelerometerelerometerJerkSTD()-Y                 : num  -0.938 -0.973 -0.971 -0.973 -0.979 ...
+ $ TimeBodyAccelerometerelerometerJerkSTD()-Z                 : num  -0.936 -0.978 -0.973 -0.976 -0.987 ...
+ $ TimeBodyGyroscopeMean()-X                                  : num  0.11998 -0.00155 -0.04821 -0.05664 -0.05999 ...
+ $ TimeBodyGyroscopeMean()-Y                                  : num  -0.0918 -0.1873 -0.1663 -0.126 -0.0847 ...
+ $ TimeBodyGyroscopeMean()-Z                                  : num  0.1896 0.1807 0.1542 0.1183 0.0787 ...
+ $ TimeBodyGyroscopeSTD()-X                                   : num  -0.883 -0.926 -0.973 -0.968 -0.975 ...
+ $ TimeBodyGyroscopeSTD()-Y                                   : num  -0.816 -0.93 -0.979 -0.975 -0.978 ...
+ $ TimeBodyGyroscopeSTD()-Z                                   : num  -0.941 -0.968 -0.976 -0.963 -0.968 ...
+ $ TimeBodyGyroscopeJerkMean()-X                              : num  -0.2049 -0.1387 -0.0978 -0.1022 -0.0918 ...
+ $ TimeBodyGyroscopeJerkMean()-Y                              : num  -0.1745 -0.0258 -0.0342 -0.0447 -0.029 ...
+ $ TimeBodyGyroscopeJerkMean()-Z                              : num  -0.0934 -0.0714 -0.06 -0.0534 -0.0612 ...
+ $ TimeBodyGyroscopeJerkSTD()-X                               : num  -0.901 -0.962 -0.984 -0.984 -0.988 ...
+ $ TimeBodyGyroscopeJerkSTD()-Y                               : num  -0.911 -0.956 -0.988 -0.99 -0.992 ...
+ $ TimeBodyGyroscopeJerkSTD()-Z                               : num  -0.939 -0.981 -0.976 -0.981 -0.982 ...
+ $ TimeBodyAccelerometerelerometerMagnitudeMean()             : num  -0.867 -0.969 -0.976 -0.974 -0.976 ...
+ $ TimeBodyAccelerometerelerometerMagnitudeSTD()              : num  -0.705 -0.954 -0.979 -0.977 -0.977 ...
+ $ TimeGravityAccelerometerelerometerMagnitudeMean()          : num  -0.867 -0.969 -0.976 -0.974 -0.976 ...
+ $ TimeGravityAccelerometerelerometerMagnitudeSTD()           : num  -0.705 -0.954 -0.979 -0.977 -0.977 ...
+ $ TimeBodyAccelerometerelerometerJerkMagnitudeMean()         : num  -0.93 -0.974 -0.982 -0.983 -0.987 ...
+ $ TimeBodyAccelerometerelerometerJerkMagnitudeSTD()          : num  -0.896 -0.941 -0.971 -0.975 -0.989 ...
+ $ TimeBodyGyroscopeMagnitudeMean()                           : num  -0.796 -0.898 -0.939 -0.947 -0.957 ...
+ $ TimeBodyGyroscopeMagnitudeSTD()                            : num  -0.762 -0.911 -0.972 -0.97 -0.969 ...
+ $ TimeBodyGyroscopeJerkMagnitudeMean()                       : num  -0.925 -0.973 -0.987 -0.989 -0.99 ...
+ $ TimeBodyGyroscopeJerkMagnitudeSTD()                        : num  -0.894 -0.944 -0.984 -0.986 -0.99 ...
+ $ FrequencyBodyAccelerometerelerometerMean()-X               : num  -0.919 -0.961 -0.992 -0.993 -0.992 ...
+ $ FrequencyBodyAccelerometerelerometerMean()-Y               : num  -0.918 -0.964 -0.965 -0.968 -0.969 ...
+ $ FrequencyBodyAccelerometerelerometerMean()-Z               : num  -0.789 -0.957 -0.967 -0.967 -0.98 ...
+ $ FrequencyBodyAccelerometerelerometerSTD()-X                : num  -0.948 -0.984 -0.995 -0.996 -0.995 ...
+ $ FrequencyBodyAccelerometerelerometerSTD()-Y                : num  -0.925 -0.97 -0.974 -0.977 -0.967 ...
+ $ FrequencyBodyAccelerometerelerometerSTD()-Z                : num  -0.636 -0.942 -0.962 -0.969 -0.978 ...
+ $ FrequencyBodyAccelerometerelerometerMeanFreq()-X           : num  0.0111 0.3521 0.1804 0.0627 -0.0189 ...
+ $ FrequencyBodyAccelerometerelerometerMeanFreq()-Y           : num  0.12125 0.17455 0.13346 0.26172 -0.00998 ...
+ $ FrequencyBodyAccelerometerelerometerMeanFreq()-Z           : num  -0.5229 -0.3207 0.1827 0.1518 0.0952 ...
+ $ FrequencyBodyAccelerometerelerometerJerkMean()-X           : num  -0.9 -0.944 -0.991 -0.991 -0.991 ...
+ $ FrequencyBodyAccelerometerelerometerJerkMean()-Y           : num  -0.937 -0.969 -0.973 -0.972 -0.98 ...
+ $ FrequencyBodyAccelerometerelerometerJerkMean()-Z           : num  -0.924 -0.973 -0.972 -0.97 -0.983 ...
+ $ FrequencyBodyAccelerometerelerometerJerkSTD()-X            : num  -0.924 -0.962 -0.992 -0.992 -0.994 ...
+ $ FrequencyBodyAccelerometerelerometerJerkSTD()-Y            : num  -0.943 -0.98 -0.971 -0.975 -0.979 ...
+ $ FrequencyBodyAccelerometerelerometerJerkSTD()-Z            : num  -0.948 -0.981 -0.972 -0.981 -0.989 ...
+ $ FrequencyBodyAccelerometerelerometerJerkMeanFreq()-X       : num  0.451 0.473 0.271 0.277 0.18 ...
+ $ FrequencyBodyAccelerometerelerometerJerkMeanFreq()-Y       : num  0.1372 0.1672 -0.2722 -0.0383 -0.1392 ...
+ $ FrequencyBodyAccelerometerelerometerJerkMeanFreq()-Z       : num  -0.1803 -0.2431 -0.0825 0.0218 0.1009 ...
+ $ FrequencyBodyGyroscopeMean()-X                             : num  -0.824 -0.923 -0.973 -0.972 -0.976 ...
+ $ FrequencyBodyGyroscopeMean()-Y                             : num  -0.808 -0.926 -0.981 -0.981 -0.98 ...
+ $ FrequencyBodyGyroscopeMean()-Z                             : num  -0.918 -0.968 -0.972 -0.967 -0.969 ...
+ $ FrequencyBodyGyroscopeSTD()-X                              : num  -0.903 -0.927 -0.973 -0.967 -0.974 ...
+ $ FrequencyBodyGyroscopeSTD()-Y                              : num  -0.823 -0.932 -0.977 -0.972 -0.977 ...
+ $ FrequencyBodyGyroscopeSTD()-Z                              : num  -0.956 -0.97 -0.979 -0.965 -0.97 ...
+ $ FrequencyBodyGyroscopeMeanFreq()-X                         : num  0.184 0.0181 -0.4791 -0.497 -0.4275 ...
+ $ FrequencyBodyGyroscopeMeanFreq()-Y                         : num  -0.0593 -0.2273 -0.2101 -0.4999 -0.2781 ...
+ $ FrequencyBodyGyroscopeMeanFreq()-Z                         : num  0.4381 -0.1517 0.0493 -0.2589 -0.2913 ...
+ $ FrequencyBodyAccelerometerelerometerMagnitudeMean()        : num  -0.791 -0.954 -0.976 -0.973 -0.978 ...
+ $ FrequencyBodyAccelerometerelerometerMagnitudeSTD()         : num  -0.711 -0.96 -0.984 -0.982 -0.979 ...
+ $ FrequencyBodyAccelerometerelerometerMagnitudeMeanFreq()    : num  -0.4835 0.2035 0.3425 0.3312 0.0711 ...
+ $ FrequencyBodyAccelerometerelerometerJerkMagnitudeMean()    : num  -0.895 -0.945 -0.971 -0.972 -0.987 ...
+ $ FrequencyBodyAccelerometerelerometerJerkMagnitudeSTD()     : num  -0.896 -0.934 -0.97 -0.978 -0.99 ...
+ $ FrequencyBodyAccelerometerelerometerJerkMagnitudeMeanFreq(): num  -0.0354 -0.4912 0.1407 0.1486 0.4222 ...
+ $ FrequencyBodyGyroscopeMagnitudeMean()                      : num  -0.771 -0.924 -0.975 -0.976 -0.977 ...
+ $ FrequencyBodyGyroscopeMagnitudeSTD()                       : num  -0.797 -0.917 -0.974 -0.971 -0.97 ...
+ $ FrequencyBodyGyroscopeMagnitudeMeanFreq()                  : num  -0.0474 -0.0315 -0.1688 -0.2856 -0.3491 ...
+ $ FrequencyBodyGyroscopeJerkMagnitudeMean()                  : num  -0.89 -0.952 -0.986 -0.986 -0.99 ...
+ $ FrequencyBodyGyroscopeJerkMagnitudeSTD()                   : num  -0.907 -0.938 -0.983 -0.986 -0.991 ...
+ $ FrequencyBodyGyroscopeJerkMagnitudeMeanFreq()              : num  0.0716 -0.4012 0.0629 0.1167 -0.1217 ...
+ $ Angle(TimeBodyAccelerometerelerometerMean,Gravity)         : num  0.00646 -0.08349 -0.03496 -0.01707 -0.00222 ...
+ $ Angle(TimeBodyAccelerometerelerometerJerkMean),GravityMean): num  0.1629 0.0175 0.2023 0.1544 -0.04 ...
+ $ Angle(TimeBodyGyroscopeMean,GravityMean)                   : num  -0.8259 -0.4344 0.0641 0.3401 0.7367 ...
+ $ Angle(TimeBodyGyroscopeJerkMean,GravityMean)               : num  0.271 0.921 0.145 0.296 -0.119 ...
+ $ Angle(X,GravityMean)                                       : num  -0.72 -0.698 -0.703 -0.699 -0.692 ...
+ $ Angle(Y,GravityMean)                                       : num  0.277 0.281 0.28 0.284 0.291 ...
+ $ Angle(Z,GravityMean)                                       : num  -0.058 -0.0839 -0.0793 -0.0771 -0.0739 ...
+ $ Activity                                                   : Factor w/ 6 levels "LAYING","SITTING",..: 3 3 3 3 3 3 3 3 3 3 ...
+ $ Subject                                                    : Factor w/ 30 levels "1","2","3","4",..: 2 2 2 2 2 2 2 2 2 2 ...
+ - attr(*, ".internal.selfref")=<externalptr> 
+ 
+ 
+ Summary of variables
 
-
-> if (!file.exists("./data/UciHarDataset")) {
-        dir.create("./data/UciHarDataset")
-}
-
-> fileUrl <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
-> download.file(fileUrl, destfile = ".data/UciHarDataset/Dataset.zip", method = "curl")
-> list.files("./data")
-
-> dateDownloaded <- date()
-> dateDownloaded
-
-
-# Read Activities files:
-
-> ActivityTest <- read.table("./data/UciHarDataset/test/y_test.txt", header = FALSE)
-> ActivityTrain <- read.table("./data/UciHarDataset/train/y_train.txt", header = FALSE)
-
-# Read Subject Files:
-        
-> SubjectTest <- read.table("./data/UciHarDataset/test/subject_test.txt", header = FALSE)
-> SubjectTrain <- read.table("./data/UciHarDataset/train/subject_train.txt", header = FALSE)
-
-# Read Features files:
-
-> FeaturesTest <- read.table("./data/UciHarDataset/test/x_test.txt", header = FALSE)
-> FeaturesTrain <- read.table("./data/UciHarDataset/train/x_train.txt", header = FALSE)
-
-
-# Merge data
-> ActivityData <- rbind(ActivityTest, ActivityTrain)
-> SubjectData <- rbind(SubjectTest, SubjectTrain)
-> FeaturesData <- rbind(FeaturesTest, FeaturesTrain)
-
-# naming columns
-
-> colnames(ActivityData) <- "Activity"
-> colnames(SubjectData) <- "Subject"
-
-#Naming the columns
-> FeaturesNames <- read.table("./data/UciHarDataset/features.txt", header = FALSE)
-> colnames(features) <- t(featuresNames[2])
-
-# Merge The Data
-> DataComplete <- cbind(FeaturesData,ActivityData,SubjectData)
-
-
-#Extracts only the measurements on the mean and standard deviation for each measurement
-
-> columnsWithMeanSTD <- grep(".*Mean.*|.*Std.*", names(DataComplete), ignore.case=TRUE)
-
-> AddedColumns <- c(columnsWithMeanSTD, 562, 563)
-
-> FinalData <- DataComplete[,AddedColumns]
-
-# Uses descriptive activity names to name the activities in the data set to name activitiesin the Data set
-
-> ActivityNames <- read.table("./data/UciHarDataset/activity_labels.txt")
-FinalData$Activity <- as.character(FinalData$Activity)
-for (i in 1:6){
-        FinalData$Activity[FinalData$Activity == i] <- as.character(ActivityNames[i,2])
-}
-
-# Part 4 - Appropriately labels the data set with descriptive variable names
-
-> FinalData$Activity <- as.factor(FinalData$Activity)
-
-# Replace accronymes
-
-> names(FinalData)<-gsub("Acc", "Accelerometer", names(FinalData))
-> names(FinalData)<-gsub("Gyro", "Gyroscope", names(FinalData))
-> names(FinalData)<-gsub("BodyBody", "Body", names(FinalData))
-> names(FinalData)<-gsub("Mag", "Magnitude", names(FinalData))
-> names(FinalData)<-gsub("^t", "Time", names(FinalData))
-> names(FinalData)<-gsub("^f", "Frequency", names(FinalData))
-> names(FinalData)<-gsub("tBody", "TimeBody", names(FinalData))
-> names(FinalData)<-gsub("-mean()", "Mean", names(FinalData), ignore.case = TRUE)
-> names(FinalData)<-gsub("-std()", "STD", names(FinalData), ignore.case = TRUE)
-> names(FinalData)<-gsub("-freq()", "Frequency", names(FinalData), ignore.case = TRUE)
-> names(FinalData)<-gsub("angle", "Angle", names(FinalData))
-> names(FinalData)<-gsub("gravity", "Gravity", names(FinalData))
-
-# Part 5 - From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject
-
-> FinalData$Subject <- as.factor(FinalData$Subject)
-> 
+summary(FinalData)
+ TimeBodyAccelerometerelerometerMean()-X TimeBodyAccelerometerelerometerMean()-Y
+ Min.   :-1.0000                         Min.   :-1.00000                       
+ 1st Qu.: 0.2626                         1st Qu.:-0.02490                       
+ Median : 0.2772                         Median :-0.01716                       
+ Mean   : 0.2743                         Mean   :-0.01774                       
+ 3rd Qu.: 0.2884                         3rd Qu.:-0.01062                       
+ Max.   : 1.0000                         Max.   : 1.00000                       
+                                                                                
+ TimeBodyAccelerometerelerometerMean()-Z TimeBodyAccelerometerelerometerSTD()-X
+ Min.   :-1.00000                        Min.   :-1.0000                       
+ 1st Qu.:-0.12102                        1st Qu.:-0.9924                       
+ Median :-0.10860                        Median :-0.9430                       
+ Mean   :-0.10892                        Mean   :-0.6078                       
+ 3rd Qu.:-0.09759                        3rd Qu.:-0.2503                       
+ Max.   : 1.00000                        Max.   : 1.0000                       
+                                                                               
+ TimeBodyAccelerometerelerometerSTD()-Y TimeBodyAccelerometerelerometerSTD()-Z
+ Min.   :-1.00000                       Min.   :-1.0000                       
+ 1st Qu.:-0.97699                       1st Qu.:-0.9791                       
+ Median :-0.83503                       Median :-0.8508                       
+ Mean   :-0.51019                       Mean   :-0.6131                       
+ 3rd Qu.:-0.05734                       3rd Qu.:-0.2787                       
+ Max.   : 1.00000                       Max.   : 1.0000                       
+                                                                              
+ TimeGravityAccelerometerelerometerMean()-X TimeGravityAccelerometerelerometerMean()-Y
+ Min.   :-1.0000                            Min.   :-1.000000                         
+ 1st Qu.: 0.8117                            1st Qu.:-0.242943                         
+ Median : 0.9218                            Median :-0.143551                         
+ Mean   : 0.6692                            Mean   : 0.004039                         
+ 3rd Qu.: 0.9547                            3rd Qu.: 0.118905                         
+ Max.   : 1.0000                            Max.   : 1.000000                         
+                                                                                      
+ TimeGravityAccelerometerelerometerMean()-Z TimeGravityAccelerometerelerometerSTD()-X
+ Min.   :-1.00000                           Min.   :-1.0000                          
+ 1st Qu.:-0.11671                           1st Qu.:-0.9949                          
+ Median : 0.03680                           Median :-0.9819                          
+ Mean   : 0.09215                           Mean   :-0.9652                          
+ 3rd Qu.: 0.21621                           3rd Qu.:-0.9615                          
+ Max.   : 1.00000                           Max.   : 1.0000                          
+                                                                                     
+ TimeGravityAccelerometerelerometerSTD()-Y TimeGravityAccelerometerelerometerSTD()-Z
+ Min.   :-1.0000                           Min.   :-1.0000                          
+ 1st Qu.:-0.9913                           1st Qu.:-0.9866                          
+ Median :-0.9759                           Median :-0.9665                          
+ Mean   :-0.9544                           Mean   :-0.9389                          
+ 3rd Qu.:-0.9464                           3rd Qu.:-0.9296                          
+ Max.   : 1.0000                           Max.   : 1.0000                          
+                                                                                    
+ TimeBodyAccelerometerelerometerJerkMean()-X TimeBodyAccelerometerelerometerJerkMean()-Y
+ Min.   :-1.00000                            Min.   :-1.000000                          
+ 1st Qu.: 0.06298                            1st Qu.:-0.018555                          
+ Median : 0.07597                            Median : 0.010753                          
+ Mean   : 0.07894                            Mean   : 0.007948                          
+ 3rd Qu.: 0.09131                            3rd Qu.: 0.033538                          
+ Max.   : 1.00000                            Max.   : 1.000000                          
+                                                                                        
+ TimeBodyAccelerometerelerometerJerkMean()-Z TimeBodyAccelerometerelerometerJerkSTD()-X
+ Min.   :-1.000000                           Min.   :-1.0000                           
+ 1st Qu.:-0.031552                           1st Qu.:-0.9913                           
+ Median :-0.001159                           Median :-0.9513                           
+ Mean   :-0.004675                           Mean   :-0.6398                           
+ 3rd Qu.: 0.024578                           3rd Qu.:-0.2912                           
+ Max.   : 1.000000                           Max.   : 1.0000                           
+                                                                                       
+ TimeBodyAccelerometerelerometerJerkSTD()-Y TimeBodyAccelerometerelerometerJerkSTD()-Z
+ Min.   :-1.0000                            Min.   :-1.0000                           
+ 1st Qu.:-0.9850                            1st Qu.:-0.9892                           
+ Median :-0.9250                            Median :-0.9543                           
+ Mean   :-0.6080                            Mean   :-0.7628                           
+ 3rd Qu.:-0.2218                            3rd Qu.:-0.5485                           
+ Max.   : 1.0000                            Max.   : 1.0000                           
+                                                                                      
+ TimeBodyGyroscopeMean()-X TimeBodyGyroscopeMean()-Y TimeBodyGyroscopeMean()-Z TimeBodyGyroscopeSTD()-X
+ Min.   :-1.00000          Min.   :-1.00000          Min.   :-1.00000          Min.   :-1.0000         
+ 1st Qu.:-0.04579          1st Qu.:-0.10399          1st Qu.: 0.06485          1st Qu.:-0.9872         
+ Median :-0.02776          Median :-0.07477          Median : 0.08626          Median :-0.9016         
+ Mean   :-0.03098          Mean   :-0.07472          Mean   : 0.08836          Mean   :-0.7212         
+ 3rd Qu.:-0.01058          3rd Qu.:-0.05110          3rd Qu.: 0.11044          3rd Qu.:-0.4822         
+ Max.   : 1.00000          Max.   : 1.00000          Max.   : 1.00000          Max.   : 1.0000         
+                                                                                                       
+ TimeBodyGyroscopeSTD()-Y TimeBodyGyroscopeSTD()-Z TimeBodyGyroscopeJerkMean()-X
+ Min.   :-1.0000          Min.   :-1.0000          Min.   :-1.00000             
+ 1st Qu.:-0.9819          1st Qu.:-0.9850          1st Qu.:-0.11723             
+ Median :-0.9106          Median :-0.8819          Median :-0.09824             
+ Mean   :-0.6827          Mean   :-0.6537          Mean   :-0.09671             
+ 3rd Qu.:-0.4461          3rd Qu.:-0.3379          3rd Qu.:-0.07930             
+ Max.   : 1.0000          Max.   : 1.0000          Max.   : 1.00000             
+                                                                                
+ TimeBodyGyroscopeJerkMean()-Y TimeBodyGyroscopeJerkMean()-Z TimeBodyGyroscopeJerkSTD()-X
+ Min.   :-1.00000              Min.   :-1.00000              Min.   :-1.0000             
+ 1st Qu.:-0.05868              1st Qu.:-0.07936              1st Qu.:-0.9907             
+ Median :-0.04056              Median :-0.05455              Median :-0.9348             
+ Mean   :-0.04232              Mean   :-0.05483              Mean   :-0.7313             
+ 3rd Qu.:-0.02521              3rd Qu.:-0.03168              3rd Qu.:-0.4865             
+ Max.   : 1.00000              Max.   : 1.00000              Max.   : 1.0000             
+                                                                                         
+ TimeBodyGyroscopeJerkSTD()-Y TimeBodyGyroscopeJerkSTD()-Z TimeBodyAccelerometerelerometerMagnitudeMean()
+ Min.   :-1.0000              Min.   :-1.0000              Min.   :-1.0000                               
+ 1st Qu.:-0.9922              1st Qu.:-0.9926              1st Qu.:-0.9819                               
+ Median :-0.9548              Median :-0.9503              Median :-0.8746                               
+ Mean   :-0.7861              Mean   :-0.7399              Mean   :-0.5482                               
+ 3rd Qu.:-0.6268              3rd Qu.:-0.5097              3rd Qu.:-0.1201                               
+ Max.   : 1.0000              Max.   : 1.0000              Max.   : 1.0000                               
+                                                                                                         
+ TimeBodyAccelerometerelerometerMagnitudeSTD() TimeGravityAccelerometerelerometerMagnitudeMean()
+ Min.   :-1.0000                               Min.   :-1.0000                                  
+ 1st Qu.:-0.9822                               1st Qu.:-0.9819                                  
+ Median :-0.8437                               Median :-0.8746                                  
+ Mean   :-0.5912                               Mean   :-0.5482                                  
+ 3rd Qu.:-0.2423                               3rd Qu.:-0.1201                                  
+ Max.   : 1.0000                               Max.   : 1.0000                                  
+                                                                                                
+ TimeGravityAccelerometerelerometerMagnitudeSTD() TimeBodyAccelerometerelerometerJerkMagnitudeMean()
+ Min.   :-1.0000                                  Min.   :-1.0000                                   
+ 1st Qu.:-0.9822                                  1st Qu.:-0.9896                                   
+ Median :-0.8437                                  Median :-0.9481                                   
+ Mean   :-0.5912                                  Mean   :-0.6494                                   
+ 3rd Qu.:-0.2423                                  3rd Qu.:-0.2956                                   
+ Max.   : 1.0000                                  Max.   : 1.0000                                   
+                                                                                                    
+ TimeBodyAccelerometerelerometerJerkMagnitudeSTD() TimeBodyGyroscopeMagnitudeMean()
+ Min.   :-1.0000                                   Min.   :-1.0000                 
+ 1st Qu.:-0.9907                                   1st Qu.:-0.9781                 
+ Median :-0.9288                                   Median :-0.8223                 
+ Mean   :-0.6278                                   Mean   :-0.6052                 
+ 3rd Qu.:-0.2733                                   3rd Qu.:-0.2454                 
+ Max.   : 1.0000                                   Max.   : 1.0000                 
+                                                                                   
+ TimeBodyGyroscopeMagnitudeSTD() TimeBodyGyroscopeJerkMagnitudeMean() TimeBodyGyroscopeJerkMagnitudeSTD()
+ Min.   :-1.0000                 Min.   :-1.0000                      Min.   :-1.0000                    
+ 1st Qu.:-0.9775                 1st Qu.:-0.9923                      1st Qu.:-0.9922                    
+ Median :-0.8259                 Median :-0.9559                      Median :-0.9403                    
+ Mean   :-0.6625                 Mean   :-0.7621                      Mean   :-0.7780                    
+ 3rd Qu.:-0.3940                 3rd Qu.:-0.5499                      3rd Qu.:-0.6093                    
+ Max.   : 1.0000                 Max.   : 1.0000                      Max.   : 1.0000                    
+                                                                                                         
+ FrequencyBodyAccelerometerelerometerMean()-X FrequencyBodyAccelerometerelerometerMean()-Y
+ Min.   :-1.0000                              Min.   :-1.0000                             
+ 1st Qu.:-0.9913                              1st Qu.:-0.9792                             
+ Median :-0.9456                              Median :-0.8643                             
+ Mean   :-0.6228                              Mean   :-0.5375                             
+ 3rd Qu.:-0.2646                              3rd Qu.:-0.1032                             
+ Max.   : 1.0000                              Max.   : 1.0000                             
+                                                                                          
+ FrequencyBodyAccelerometerelerometerMean()-Z FrequencyBodyAccelerometerelerometerSTD()-X
+ Min.   :-1.0000                              Min.   :-1.0000                            
+ 1st Qu.:-0.9832                              1st Qu.:-0.9929                            
+ Median :-0.8954                              Median :-0.9416                            
+ Mean   :-0.6650                              Mean   :-0.6034                            
+ 3rd Qu.:-0.3662                              3rd Qu.:-0.2493                            
+ Max.   : 1.0000                              Max.   : 1.0000                            
+                                                                                         
+ FrequencyBodyAccelerometerelerometerSTD()-Y FrequencyBodyAccelerometerelerometerSTD()-Z
+ Min.   :-1.00000                            Min.   :-1.0000                            
+ 1st Qu.:-0.97689                            1st Qu.:-0.9780                            
+ Median :-0.83261                            Median :-0.8398                            
+ Mean   :-0.52842                            Mean   :-0.6179                            
+ 3rd Qu.:-0.09216                            3rd Qu.:-0.3023                            
+ Max.   : 1.00000                            Max.   : 1.0000                            
+                                                                                        
+ FrequencyBodyAccelerometerelerometerMeanFreq()-X FrequencyBodyAccelerometerelerometerMeanFreq()-Y
+ Min.   :-1.00000                                 Min.   :-1.000000                               
+ 1st Qu.:-0.41878                                 1st Qu.:-0.144772                               
+ Median :-0.23825                                 Median : 0.004666                               
+ Mean   :-0.22147                                 Mean   : 0.015401                               
+ 3rd Qu.:-0.02043                                 3rd Qu.: 0.176603                               
+ Max.   : 1.00000                                 Max.   : 1.000000                               
+                                                                                                  
+ FrequencyBodyAccelerometerelerometerMeanFreq()-Z FrequencyBodyAccelerometerelerometerJerkMean()-X
+ Min.   :-1.00000                                 Min.   :-1.0000                                 
+ 1st Qu.:-0.13845                                 1st Qu.:-0.9912                                 
+ Median : 0.06084                                 Median :-0.9516                                 
+ Mean   : 0.04731                                 Mean   :-0.6567                                 
+ 3rd Qu.: 0.24922                                 3rd Qu.:-0.3270                                 
+ Max.   : 1.00000                                 Max.   : 1.0000                                 
+                                                                                                  
+ FrequencyBodyAccelerometerelerometerJerkMean()-Y FrequencyBodyAccelerometerelerometerJerkMean()-Z
+ Min.   :-1.0000                                  Min.   :-1.0000                                 
+ 1st Qu.:-0.9848                                  1st Qu.:-0.9873                                 
+ Median :-0.9257                                  Median :-0.9475                                 
+ Mean   :-0.6290                                  Mean   :-0.7436                                 
+ 3rd Qu.:-0.2638                                  3rd Qu.:-0.5133                                 
+ Max.   : 1.0000                                  Max.   : 1.0000                                 
+                                                                                                  
+ FrequencyBodyAccelerometerelerometerJerkSTD()-X FrequencyBodyAccelerometerelerometerJerkSTD()-Y
+ Min.   :-1.0000                                 Min.   :-1.0000                                
+ 1st Qu.:-0.9920                                 1st Qu.:-0.9865                                
+ Median :-0.9562                                 Median :-0.9280                                
+ Mean   :-0.6550                                 Mean   :-0.6122                                
+ 3rd Qu.:-0.3203                                 3rd Qu.:-0.2361                                
+ Max.   : 1.0000                                 Max.   : 1.0000                                
+                                                                                                
+ FrequencyBodyAccelerometerelerometerJerkSTD()-Z FrequencyBodyAccelerometerelerometerJerkMeanFreq()-X
+ Min.   :-1.0000                                 Min.   :-1.00000                                    
+ 1st Qu.:-0.9895                                 1st Qu.:-0.29770                                    
+ Median :-0.9590                                 Median :-0.04544                                    
+ Mean   :-0.7809                                 Mean   :-0.04771                                    
+ 3rd Qu.:-0.5903                                 3rd Qu.: 0.20447                                    
+ Max.   : 1.0000                                 Max.   : 1.00000                                    
+                                                                                                     
+ FrequencyBodyAccelerometerelerometerJerkMeanFreq()-Y FrequencyBodyAccelerometerelerometerJerkMeanFreq()-Z
+ Min.   :-1.000000                                    Min.   :-1.00000                                    
+ 1st Qu.:-0.427951                                    1st Qu.:-0.33139                                    
+ Median :-0.236530                                    Median :-0.10246                                    
+ Mean   :-0.213393                                    Mean   :-0.12383                                    
+ 3rd Qu.: 0.008651                                    3rd Qu.: 0.09124                                    
+ Max.   : 1.000000                                    Max.   : 1.00000                                    
+                                                                                                          
+ FrequencyBodyGyroscopeMean()-X FrequencyBodyGyroscopeMean()-Y FrequencyBodyGyroscopeMean()-Z
+ Min.   :-1.0000                Min.   :-1.0000                Min.   :-1.0000               
+ 1st Qu.:-0.9853                1st Qu.:-0.9847                1st Qu.:-0.9851               
+ Median :-0.8917                Median :-0.9197                Median :-0.8877               
+ Mean   :-0.6721                Mean   :-0.7062                Mean   :-0.6442               
+ 3rd Qu.:-0.3837                3rd Qu.:-0.4735                3rd Qu.:-0.3225               
+ Max.   : 1.0000                Max.   : 1.0000                Max.   : 1.0000               
+                                                                                             
+ FrequencyBodyGyroscopeSTD()-X FrequencyBodyGyroscopeSTD()-Y FrequencyBodyGyroscopeSTD()-Z
+ Min.   :-1.0000               Min.   :-1.0000               Min.   :-1.0000              
+ 1st Qu.:-0.9881               1st Qu.:-0.9808               1st Qu.:-0.9862              
+ Median :-0.9053               Median :-0.9061               Median :-0.8915              
+ Mean   :-0.7386               Mean   :-0.6742               Mean   :-0.6904              
+ 3rd Qu.:-0.5225               3rd Qu.:-0.4385               3rd Qu.:-0.4168              
+ Max.   : 1.0000               Max.   : 1.0000               Max.   : 1.0000              
+                                                                                          
+ FrequencyBodyGyroscopeMeanFreq()-X FrequencyBodyGyroscopeMeanFreq()-Y FrequencyBodyGyroscopeMeanFreq()-Z
+ Min.   :-1.00000                   Min.   :-1.00000                   Min.   :-1.00000                  
+ 1st Qu.:-0.27189                   1st Qu.:-0.36257                   1st Qu.:-0.23240                  
+ Median :-0.09868                   Median :-0.17298                   Median :-0.05369                  
+ Mean   :-0.10104                   Mean   :-0.17428                   Mean   :-0.05139                  
+ 3rd Qu.: 0.06810                   3rd Qu.: 0.01366                   3rd Qu.: 0.12251                  
+ Max.   : 1.00000                   Max.   : 1.00000                   Max.   : 1.00000                  
+                                                                                                         
+ FrequencyBodyAccelerometerelerometerMagnitudeMean() FrequencyBodyAccelerometerelerometerMagnitudeSTD()
+ Min.   :-1.0000                                     Min.   :-1.0000                                   
+ 1st Qu.:-0.9847                                     1st Qu.:-0.9829                                   
+ Median :-0.8755                                     Median :-0.8547                                   
+ Mean   :-0.5860                                     Mean   :-0.6595                                   
+ 3rd Qu.:-0.2173                                     3rd Qu.:-0.3823                                   
+ Max.   : 1.0000                                     Max.   : 1.0000                                   
+                                                                                                       
+ FrequencyBodyAccelerometerelerometerMagnitudeMeanFreq()
+ Min.   :-1.00000                                       
+ 1st Qu.:-0.09663                                       
+ Median : 0.07026                                       
+ Mean   : 0.07688                                       
+ 3rd Qu.: 0.24495                                       
+ Max.   : 1.00000                                       
+                                                        
+ FrequencyBodyAccelerometerelerometerJerkMagnitudeMean()
+ Min.   :-1.0000                                        
+ 1st Qu.:-0.9898                                        
+ Median :-0.9290                                        
+ Mean   :-0.6208                                        
+ 3rd Qu.:-0.2600                                        
+ Max.   : 1.0000                                        
+                                                        
+ FrequencyBodyAccelerometerelerometerJerkMagnitudeSTD()
+ Min.   :-1.0000                                       
+ 1st Qu.:-0.9907                                       
+ Median :-0.9255                                       
+ Mean   :-0.6401                                       
+ 3rd Qu.:-0.3082                                       
+ Max.   : 1.0000                                       
+                                                       
+ FrequencyBodyAccelerometerelerometerJerkMagnitudeMeanFreq() FrequencyBodyGyroscopeMagnitudeMean()
+ Min.   :-1.000000                                           Min.   :-1.0000                      
+ 1st Qu.:-0.002959                                           1st Qu.:-0.9825                      
+ Median : 0.164180                                           Median :-0.8756                      
+ Mean   : 0.173220                                           Mean   :-0.6974                      
+ 3rd Qu.: 0.357307                                           3rd Qu.:-0.4514                      
+ Max.   : 1.000000                                           Max.   : 1.0000                      
+                                                                                                  
+ FrequencyBodyGyroscopeMagnitudeSTD() FrequencyBodyGyroscopeMagnitudeMeanFreq()
+ Min.   :-1.0000                      Min.   :-1.00000                         
+ 1st Qu.:-0.9781                      1st Qu.:-0.23436                         
+ Median :-0.8275                      Median :-0.05210                         
+ Mean   :-0.7000                      Mean   :-0.04156                         
+ 3rd Qu.:-0.4713                      3rd Qu.: 0.15158                         
+ Max.   : 1.0000                      Max.   : 1.00000                         
+                                                                               
+ FrequencyBodyGyroscopeJerkMagnitudeMean() FrequencyBodyGyroscopeJerkMagnitudeSTD()
+ Min.   :-1.0000                           Min.   :-1.0000                         
+ 1st Qu.:-0.9921                           1st Qu.:-0.9926                         
+ Median :-0.9453                           Median :-0.9382                         
+ Mean   :-0.7798                           Mean   :-0.7922                         
+ 3rd Qu.:-0.6122                           3rd Qu.:-0.6437                         
+ Max.   : 1.0000                           Max.   : 1.0000                         
+                                                                                   
+ FrequencyBodyGyroscopeJerkMagnitudeMeanFreq() Angle(TimeBodyAccelerometerelerometerMean,Gravity)
+ Min.   :-1.00000                              Min.   :-1.000000                                 
+ 1st Qu.:-0.01948                              1st Qu.:-0.124694                                 
+ Median : 0.13625                              Median : 0.008146                                 
+ Mean   : 0.12671                              Mean   : 0.007705                                 
+ 3rd Qu.: 0.28896                              3rd Qu.: 0.149005                                 
+ Max.   : 1.00000                              Max.   : 1.000000                                 
+                                                                                                 
+ Angle(TimeBodyAccelerometerelerometerJerkMean),GravityMean) Angle(TimeBodyGyroscopeMean,GravityMean)
+ Min.   :-1.000000                                           Min.   :-1.00000                        
+ 1st Qu.:-0.287031                                           1st Qu.:-0.49311                        
+ Median : 0.007668                                           Median : 0.01719                        
+ Mean   : 0.002648                                           Mean   : 0.01768                        
+ 3rd Qu.: 0.291490                                           3rd Qu.: 0.53614                        
+ Max.   : 1.000000                                           Max.   : 1.00000                        
+                                                                                                     
+ Angle(TimeBodyGyroscopeJerkMean,GravityMean) Angle(X,GravityMean) Angle(Y,GravityMean) Angle(Z,GravityMean)
+ Min.   :-1.000000                            Min.   :-1.0000      Min.   :-1.000000    Min.   :-1.000000   
+ 1st Qu.:-0.389041                            1st Qu.:-0.8173      1st Qu.: 0.002151    1st Qu.:-0.131880   
+ Median :-0.007186                            Median :-0.7156      Median : 0.182029    Median :-0.003882   
+ Mean   :-0.009219                            Mean   :-0.4965      Mean   : 0.063255    Mean   :-0.054284   
+ 3rd Qu.: 0.365996                            3rd Qu.:-0.5215      3rd Qu.: 0.250790    3rd Qu.: 0.102970   
+ Max.   : 1.000000                            Max.   : 1.0000      Max.   : 1.000000    Max.   : 1.000000 
